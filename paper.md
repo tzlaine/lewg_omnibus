@@ -50,7 +50,17 @@ initial proposal.
 
 # The Proper Use of `explicit` in Types and Class Templates in the Standard Library
 
-TODO
+Tony Van Eerd has a very thorough analysis of when `explicit` should be
+applied to constructors and conversion operators ([@Conv]).
+
+Suggested Poll: A constructor callable with a single argument or a conversion
+operator should be declared `explicit` unless it:
+
+- is a conversion between two types that are essentially the same;
+- preserves all data during conversion;
+- imposes little or no performance penalty;
+- does not throw; and
+- results in a memory-safe value.
 
 # The `is_` Prefix: Friend or Foe?
 
@@ -72,3 +82,15 @@ Suggested Poll: Predicate-like type traits should be prefixed with `is_`.
 
 # `any_`: A Great Prefix for Naming Erased Types, or The Greatest Prefix for Naming Erased Types?
 
+TODO
+
+---
+references:
+  - id: Conv
+    citation-label: Conv
+    title: "Implicit and Explicit Conversions"
+    author:
+      - family: Tony \"T-Dog\"
+        given: Van Eerd
+    URL: https://github.com/tvaneerd/isocpp/blob/master/conversions.md
+---
