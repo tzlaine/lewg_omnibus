@@ -1,6 +1,6 @@
 ---
 title: "LEWG Omnibus Design Policy Paper"
-document: P1655R0
+document: D1655R0
 date: 2019-06-01
 audience: LEWG
 author:
@@ -20,6 +20,16 @@ standardized in normative wording.  Rather, the guidelines should be voted on
 by LEWG, and act as *de facto* rules, applied both to increase the consistency
 of LEWG decisionmaking, and to reduce the time that LEWG takes to process
 papers.
+
+The guidelines are just that -- guidelines -- and not rules.  The 90% figure
+above does not cover every case, and this is intentional.  Exceptions to the
+guideline should be uncommon, well-motivated, and provide clear benefits over
+following the guideline.  For instance, the guideline below regarding
+conversions requires `explicit` conversions whenever the conversion results in
+a memory-unsafe value.  However, the conversion from `string` to `string_view`
+is memory-unsafe; the `string_view` may be left dangling at some point after
+the converison.  Even so, this "unsafe" conversion is appropriate, given the
+intended use of `string_view` as a function parameter.
 
 Below, I have added sections for four different guidelines that have come up
 in the past few meetings' LEWG sessions.  For each, I have included minimal
@@ -51,7 +61,7 @@ overloads should not be part of an initial proposal.
 # The Proper Use of `explicit` in Types and Class Templates in the Standard Library
 
 Tony Van Eerd has a very thorough analysis of when `explicit` should be
-applied to constructors and conversion operators ([@Conv]).
+applied to constructors and conversion operators ([@P0705R0]).
 
 Suggested Poll: A constructor callable with a single argument or a conversion
 operator should be declared `explicit` unless it:
@@ -121,14 +131,3 @@ erased type models.
 
 Suggested Poll: An erased type should be named `any_C`, where `C` is the name
 of the concept that it represents.
-
----
-references:
-  - id: Conv
-    citation-label: Conv
-    title: "Implicit and Explicit Conversions"
-    author:
-      - family: Tony \"T-Dog\"
-        given: Van Eerd
-    URL: https://github.com/tvaneerd/isocpp/blob/master/conversions.md
----
