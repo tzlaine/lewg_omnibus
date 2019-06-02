@@ -6,7 +6,7 @@ audience: LEWG
 author:
   - name: Zach Laine
     email: <whatwasthataddress@gmail.com>
-toc: true
+toc: false
 
 ---
 
@@ -39,13 +39,13 @@ to have a guideline at all).
 Since we now have an effective fork of the standard algorithms into the
 unconstrained ones in `std` and the concept-constrained ones in `std::ranges`,
 *and* considering that we have parallel verions of most of the algorithms, how
-do we want new algorithm submissions to be propoesed?
+do we want new algorithm submissions to be proposed?
 
 Suggested Poll: All new algorithms should be concept-constrained, and go into
 `std::ranges`.
 
-Suggested Poll: Parallel versions of new algorithms should not be part of an
-initial proposal.
+Suggested Poll: For new algorithms with non-parallel overloads, parallel
+overloads should not be part of an initial proposal.
 
 
 # The Proper Use of `explicit` in Types and Class Templates in the Standard Library
@@ -64,15 +64,36 @@ operator should be declared `explicit` unless it:
 
 # The `is_` Prefix: Friend or Foe?
 
-There are quite a few interfaces in the standard library that return `bool`
-and are prefexed with `is_`.  However, most interfaces that return `bool`, and
-have no `is_` prefix.  There are also the type traits; all the predicate-like
-ones are prefixed with `is_`.
+There are functions in the standard library that return `bool` with names that
+are prefexed with `is_`.  However, most functions that return `bool`, and have
+no `is_` prefix.  There are also the type traits; all the predicate-like ones
+are prefixed with `is_`.
 
 Note that there used to be an argument that we need `is_foo()` to disambiguate
 two overloads of `foo()`, one of which returns `bool` and one of which returns
-`void`.  Now that we have `[[nodiscard]]`, and that LWG sprinkles it liberally
-on standard library interfaces, we don't really need this disambiguation.
+`void`.  For example, one might create a type that empties itself when one
+calls:
+
+```c++
+void empty();
+```
+
+or that indicates its empty status with a call to:
+
+```c++
+bool empty() const;
+```
+
+By naming the second function `is_empty()`, a casual glance at the code should
+indicate what's happening:
+
+```c++
+is_empty(); // Clearly, we're calling a const member function,
+            // even though the result is ignored.
+```
+
+Now that we have `[[nodiscard]]`, and since LWG sprinkles it liberally on
+standard library interfaces, we don't really need this disambiguation.
 
 Suggested Poll: Standard library functions that return `bool` should not be
 prefixed with `is_`.
@@ -82,7 +103,24 @@ Suggested Poll: Predicate-like type traits should be prefixed with `is_`.
 
 # `any_`: A Great Prefix for Naming Erased Types, or The Greatest Prefix for Naming Erased Types?
 
-TODO
+I use this convention in type erasure code that I write.  The name of any
+erased type is `any_C`, where `C` is the name of the concept that the erased
+type represents.  I am not alone in this.  Eric Niebler uses the same
+convention; so did the team that originally developed the Adobe Source
+Libraries (Sean Parent and Alex Stepanov, among others).  Among people that
+use type erasure more often than the occasional `std::function`, this is a
+very common practice.
+
+The reason that the `any_` prefix is so important to the name is that it
+reflects the substitutability relationship that must exist between a type used
+to construct the erased type and the erased type itself.  This is a
+relationship among types that only exists when using inheritance or type
+erasure.  It is worth expressing clearly, as the fundamental job of an erased
+type is to be a stand-in for any type that models the concept `C` that the
+erased type models.
+
+Suggested Poll: An erased type should be named `any_C`, where `C` is the name
+of the concept that it represents.
 
 ---
 references:
