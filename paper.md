@@ -1,6 +1,6 @@
 ---
 title: "LEWG Omnibus Design Policy Paper"
-document: D1655R0
+document: P1655R0
 date: 2019-06-01
 audience: LEWG
 author:
